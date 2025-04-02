@@ -15,22 +15,27 @@ function App() {
 
   const addTask = () => {
     if (taskInput.trim() !== "") {
+      const newTask = {
+        id: Date.now(), 
+        task: taskInput,
+        completed: false,
+      };
       setTasks((previousTasks) => [
         ...previousTasks,
-        { task: taskInput, completed: false },
+        newTask,
       ]);
       setTaskInput("");
     }
   };
 
-  const deleteTask = (taskToDelete) => {
-    const updatedTasks = tasks.filter((task) => task.task !== taskToDelete);
+  const deleteTask = (taskId) => {
+    const updatedTasks = tasks.filter((task) => task.id !== taskId);
     setTasks(updatedTasks);
   };
 
-  const toggleComplete = (taskToToggle) => {
+  const toggleComplete = (taskId) => {
     const updatedTasks = tasks.map((task) =>
-      task.task === taskToToggle
+      task.id === taskId
         ? { ...task, completed: !task.completed }
         : task
     );
@@ -53,18 +58,18 @@ function App() {
         </button>
       </div>
       <ul className="taskList">
-        {tasks.map((task, index) => (
-          <li key={index}>
+        {tasks.map((task) => (
+          <li key={task.id}>
             <input
               type="checkbox"
               className="checkbox-list"
               checked={task.completed}
-              onChange={() => toggleComplete(task.task)}
+              onChange={() => toggleComplete(task.id)} 
             />
             <p className={`taskList-info ${task.completed ? "completed" : ""}`}>
               {task.task}
             </p>
-            <button className="delete" onClick={() => deleteTask(task.task)}>
+            <button className="delete" onClick={() => deleteTask(task.id)}>
               <span className="material-symbols-outlined">close</span>
             </button>
           </li>
