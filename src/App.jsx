@@ -77,13 +77,21 @@ function App() {
   };
 
   const editTask = (taskId, taskText) => {
-    setTaskToEdit({ id: taskId, task: taskText });
+    setTaskToEdit({ id: taskId, task: taskText, category: category, priority: priority });
+    setEditedTaskInput(taskText); // Set default value to the task's current text
     setShowConfirmation(true);
   };
 
   const saveEditedTask = () => {
     const updatedTasks = tasks.map((task) =>
-      task.id === taskToEdit.id ? { ...task, task: editedTaskInput } : task
+      task.id === taskToEdit.id
+        ? {
+            ...task,
+            task: editedTaskInput,
+            category: taskToEdit.category,
+            priority: taskToEdit.priority,
+          }
+        : task
     );
     setTasks(updatedTasks);
     setIsEditing(false);
@@ -128,6 +136,26 @@ function App() {
             placeholder="Chỉnh sửa task..."
             autoFocus
           />
+          <select
+            value={taskToEdit.category}
+            onChange={(e) =>
+              setTaskToEdit((prev) => ({ ...prev, category: e.target.value }))
+            }
+          >
+            <option value="job">Job</option>
+            <option value="Study">Study</option>
+            <option value="Individual">Individual</option>
+          </select>
+          <select
+            value={taskToEdit.priority}
+            onChange={(e) =>
+              setTaskToEdit((prev) => ({ ...prev, priority: e.target.value }))
+            }
+          >
+            <option value="Low Priority">Low Priority</option>
+            <option value="Medium Priority">Medium Priority</option>
+            <option value="High Priority">High Priority</option>
+          </select>
           <div className="popup-buttons">
             <button onClick={onConfirm}>Lưu</button>
             <button onClick={onCancel}>Hủy</button>
